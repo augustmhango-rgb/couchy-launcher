@@ -75,6 +75,17 @@ data class LauncherConfig(
     val language: String = "",
     /** 0 = carousel (fixed selection), 1 = grid, 2 = dock */
     val layout: Int = 2, // Dock
+    val customIcons: Map<String, String> = emptyMap(),
+    val renamedApps: Map<String, String> = emptyMap(),
+    val favourites: List<String> = emptyList(),
+    val homeOrder: List<String> = emptyList(),
+    val homeColumns: Int = 6,
+    val lightMode: Boolean = false,
+    val topShelf: Boolean = true,
+    val animationMillis: Int = 240,
+    val ambientMotion: Boolean = false,
+    val backgroundBlur: Int = 0,
+    val startOnBoot: Boolean = false,
 )
 
 const val LAYOUT_CAROUSEL = 0

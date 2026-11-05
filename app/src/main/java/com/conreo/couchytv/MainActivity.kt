@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            LauncherApp(rescanTick)
+            com.conreo.couchytv.premium.PremiumHome(rescanTick)
         }
     }
 

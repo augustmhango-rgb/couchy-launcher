@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Couchy 启动器</string>
+    <string name="app_name">Apple TV Home</string>
 
     <!-- 默认分类名称（首次安装） -->
     <string name="cat_streaming">流媒体</string>

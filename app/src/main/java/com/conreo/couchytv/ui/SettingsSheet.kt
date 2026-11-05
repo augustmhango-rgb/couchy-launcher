@@ -1325,32 +1325,7 @@ private fun WallpaperScreen(
         /* ---------------- VIDEO: built-in aerials + your own video ---------------- */
         SectionLabel(stringResource(R.string.wp_section_video))
 
-        // Built-in aerial videos
-        SettingsItem(
-            selected = false, onClick = onSelectBuiltinAerials,
-            headlineContent = { Text(stringResource(R.string.builtin_aerials)) },
-            supportingContent = { Text(stringResource(R.string.builtin_aerials_sub)) },
-            leadingContent = { Icon(AppIcons.Play, contentDescription = null) },
-            trailingContent = { CheckMark(checked = config.useBuiltinAerials) },
-        )
-        if (config.useBuiltinAerials) {
-            val sourceNames = listOf(
-                stringResource(R.string.aerial_src_all),
-                stringResource(R.string.aerial_src_apple),
-                stringResource(R.string.aerial_src_amazon),
-                stringResource(R.string.aerial_src_comm1),
-                stringResource(R.string.aerial_src_comm2),
-            )
-            val idx = config.builtinSource.coerceIn(0, sourceNames.size - 1)
-            SelectorRow(
-                label = stringResource(R.string.aerial_src_label),
-                value = sourceNames[idx],
-                steps = sourceNames.size,
-                current = idx,
-                onSelect = { v -> onSelectBuiltinSource(v) },
-            )
-        }
-
+        // Use your own licensed local video; no proprietary aerial catalogue is offered.
         // A video file of your own
         SettingsItem(
             selected = false, onClick = onPickVideo,
