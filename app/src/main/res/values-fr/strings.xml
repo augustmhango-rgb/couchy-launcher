@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Couchy Launcher</string>
+    <string name="app_name">Apple TV Home</string>
 
     <!-- Noms des catégories par défaut (première installation) -->
     <string name="cat_streaming">Streaming</string>

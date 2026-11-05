@@ -1324,25 +1324,9 @@ private fun PeekStrip(app: AppEntry, cardWidth: Dp, cardHeight: Dp, peekH: Dp) {
     }
 }
 
-/**
- * Shared OkHttp client (built once, lazily) that accepts any TLS cert — used
- * ONLY to stream decorative aerial video. Apple's sylvan.apple.com serves a
- * chain many Android-TV trust stores reject, so normal validation kills the
- * wallpaper. No credentials or private data ever go over this client, so
- * skipping validation is acceptable. One instance for the whole app lifetime —
- * OkHttpDataSource never closes it, so sharing is safe.
- */
-private val trustAllHttpClient: okhttp3.OkHttpClient by lazy {
-    val trustAll = object : javax.net.ssl.X509TrustManager {
-        override fun checkClientTrusted(c: Array<java.security.cert.X509Certificate>?, a: String?) {}
-        override fun checkServerTrusted(c: Array<java.security.cert.X509Certificate>?, a: String?) {}
-        override fun getAcceptedIssuers() = arrayOf<java.security.cert.X509Certificate>()
-    }
-    val ctx = javax.net.ssl.SSLContext.getInstance("TLS")
-    ctx.init(null, arrayOf<javax.net.ssl.TrustManager>(trustAll), java.security.SecureRandom())
+/** Normal certificate and hostname validation for any user-selected network media. */
+private val wallpaperHttpClient: okhttp3.OkHttpClient by lazy {
     okhttp3.OkHttpClient.Builder()
-        .sslSocketFactory(ctx.socketFactory, trustAll)
-        .hostnameVerifier { _, _ -> true }
         .connectTimeout(20, java.util.concurrent.TimeUnit.SECONDS)
         .readTimeout(20, java.util.concurrent.TimeUnit.SECONDS)
         .build()
@@ -1356,7 +1340,7 @@ private val trustAllHttpClient: okhttp3.OkHttpClient by lazy {
  */
 @androidx.annotation.OptIn(androidx.media3.common.util.UnstableApi::class)
 @Composable
-private fun VideoWallpaper(
+internal fun VideoWallpaper(
     uri: String,
     speed: Float = 1f,
     loop: Boolean = true,
@@ -1391,7 +1375,7 @@ private fun VideoWallpaper(
             // anchor not found"), which fails the TLS handshake → the aerial never
             // loads (black). Scoped to the wallpaper player only; it fetches
             // nothing but decorative public video, so there's no data to protect.
-            val http = androidx.media3.datasource.okhttp.OkHttpDataSource.Factory(trustAllHttpClient)
+            val http = androidx.media3.datasource.okhttp.OkHttpDataSource.Factory(wallpaperHttpClient)
             val dataSource = androidx.media3.datasource.DefaultDataSource.Factory(context, http)
             val sourceFactory = androidx.media3.exoplayer.source.DefaultMediaSourceFactory(dataSource)
             return androidx.media3.exoplayer.ExoPlayer.Builder(context)
