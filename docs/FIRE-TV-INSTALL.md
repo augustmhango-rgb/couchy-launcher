@@ -4,13 +4,13 @@ This is a separate app (`com.conreo.appletvhome`). Your existing Couchy app and 
 
 ## Download and install
 
-The public APK is not published until the signed release is uploaded. Do not assume a GitHub link below is live yet.
+The signed development APK can be downloaded directly from the feature branch. A matching GitHub prerelease is created by CI only after its checks pass. This is a development build, not a device-tested final release.
 
 After publication, on the Fire TV:
 
 1. Install **Downloader** from the Amazon Appstore.
 2. Open **Settings → My Fire TV → Developer Options → Install unknown apps**. Allow **Downloader**. If Developer Options is hidden, open About and press Select on the device name seven times, then go back.
-3. Open Downloader and enter `https://github.com/augustmhango-rgb/couchy-launcher/releases/latest/download/Apple-TV-Home.apk`.
+3. Open Downloader and enter `https://github.com/augustmhango-rgb/couchy-launcher/raw/refs/heads/feat/apple-tv-home/distribution/Apple-TV-Home.apk`.
 4. Choose **Install**, then **Open**. Keep Couchy installed.
 
 GitHub Actions also retains a debug APK under the run's **Artifacts**, accessible while signed in to GitHub. Those downloads are ZIP files and are intended for testing, not the simple Downloader installation path. Install releases for stable future updates. Debug and release use different certificates and cannot update each other.

@@ -20,11 +20,23 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
       - name: Install SDK 34
         run: sdkmanager 'platforms;android-34' 'build-tools;34.0.0'
       - uses: gradle/actions/setup-gradle@v4
       - name: Tests, debug APK, release APK and lint
         run: ./gradlew testDebugUnitTest assembleDebug assembleRelease lintRelease --no-daemon --max-workers=2
+      - name: Verify supplied signed installer and its source manifest
+        run: |
+          sha256sum --check distribution/SOURCE-SHA256.txt
+          sha256sum --check distribution/SHA256SUMS.txt
+          "$ANDROID_HOME/build-tools/34.0.0/apksigner" verify --print-certs distribution/Apple-TV-Home.apk > certificate.txt
+          grep -F '3d4a3ca83fe9313dbc830dab5189a5ae982271e4cc5fc4bb40c4fc0e2ce372f3' certificate.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Apple-TV-Home-signed-installable
+          path: distribution/Apple-TV-Home.apk
       - uses: actions/upload-artifact@v4
         with:
           name: Apple-TV-Home-debug
@@ -55,6 +67,8 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: android-actions/setup-android@v3
+        with:
+          packages: platform-tools
       - run: sdkmanager 'platforms;android-34' 'build-tools;34.0.0'
       - uses: gradle/actions/setup-gradle@v4
       - name: Load persistent release key
@@ -85,3 +99,21 @@ jobs:
       - name: Remove signing material
         if: always()
         run: rm -f "$RUNNER_TEMP/apple-tv-home.jks"
+
+  publish-preview:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/feat/apple-tv-home'
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish the verified signed development APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="appletv-preview-${GITHUB_SHA:0:7}"
+          cp distribution/Apple-TV-Home.apk Apple-TV-Home.apk
+          sha256sum Apple-TV-Home.apk > SHA256SUMS.txt
+          git archive --format=zip --output=Apple-TV-Home-source.zip HEAD
+          gh release create "$TAG" Apple-TV-Home.apk SHA256SUMS.txt Apple-TV-Home-source.zip --target "$GITHUB_SHA" --prerelease --title "Apple TV Home 0.1.0 development build" --notes "Signed development APK. Cloud compilation, six JVM server tests and lint passed; no real Fire Stick or iPhone testing has been performed. See docs/FIRE-TV-INSTALL.md and docs/BUILD-STATUS.md. Automatic Home/wake behaviour needs Home on Fire and firmware-dependent permissions. Keep your existing Couchy installation."

@@ -2,8 +2,9 @@
 
 A separate Android TV launcher with a tvOS-inspired home screen and paired iPhone icon uploads. Package: `com.conreo.appletvhome`; your existing Couchy installation remains separate. This project is not affiliated with Apple or Amazon.
 
-**Status: signed development release built locally; not tested on a real Fire Stick. GitHub release publication is pending.**
+**Status: signed development release built locally; not tested on a real Fire Stick. [Draft PR #1](https://github.com/augustmhango-rgb/couchy-launcher/pull/1) is open.**
 
+- [Download the signed development APK](https://github.com/augustmhango-rgb/couchy-launcher/raw/refs/heads/feat/apple-tv-home/distribution/Apple-TV-Home.apk)
 - [Simple Fire TV / iPhone installation and setup](docs/FIRE-TV-INSTALL.md)
 - [Build results, implemented features and known limitations](docs/BUILD-STATUS.md)
 - Original Couchy source and GPLv3 notices are retained below. The new launcher uses original artwork and system fonts; it does not bundle Apple's graphical assets or aerial videos.
